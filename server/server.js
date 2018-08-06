@@ -21,11 +21,13 @@ io.on('connection', (socket) => {
     socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app!'));
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'A new user has joined'));
 
-    socket.on('createMessage', (newCreateMessage) => {
+    socket.on('createMessage', (newCreateMessage, callback) => {
         console.log('createMessage', newCreateMessage);
         
         // Emits an event to every connection
         io.emit('newMessage', generateMessage(newCreateMessage.from, newCreateMessage.text));
+        // This will run the callback function in createMessage in index.js.
+        callback('\nThis is from the server.');
 
         // Emit messages to everyone except yourself.
         // socket.broadcast.emit('newMessage', {
