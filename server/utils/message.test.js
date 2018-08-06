@@ -1,6 +1,6 @@
 let expect = require('expect');
 
-let {generateMessage} = require('./message');
+let {generateMessage, generateLocationMessage} = require('./message');
 
 describe('generateMessage', () => {
     it('should generate the correct message object' , () => {
@@ -25,4 +25,25 @@ describe('generateMessage', () => {
         //     })
         //     .end(done);
     });
-})
+});
+
+describe('generateLocationMessage', () => {
+    it('should generate correct location object', () => {
+        let newLocationMessage ={
+            from: 'Tomtom',
+            latitude: '34.889728',
+            longitude: '-120.418304'
+        };
+        let url = 'https://www.google.com/maps?q=34.889728,-120.418304';
+        let message = generateLocationMessage(newLocationMessage.from, newLocationMessage.latitude, newLocationMessage.longitude);
+        let result = {
+            from: 'Tomtom',
+            url
+        };
+
+        expect(typeof message.createdAt).toBe('number');
+        expect(message.from).toBe(newLocationMessage.from);
+        expect(message.url).toBe(`https://www.google.com/maps?q=${newLocationMessage.latitude},${newLocationMessage.longitude}`);
+        expect(result).toMatchObject(result);
+    });
+});
