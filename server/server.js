@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
         // Emits an event to every connection
         io.emit('newMessage', generateMessage(newCreateMessage.from, newCreateMessage.text));
         // This will run the callback function in createMessage in index.js.
-        callback('\nThis is from the server.');
+        callback();
 
         // Emit messages to everyone except yourself.
         // socket.broadcast.emit('newMessage', {
