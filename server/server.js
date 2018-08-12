@@ -55,10 +55,13 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createMessage', (newCreateMessage, callback) => {
-        console.log('createMessage', newCreateMessage);
+        let user = users.getUser(socket.id);
+        // If user exists and string has text.
+        if (user && isRealString(newCreateMessage.text)) {
+            // Emits an event to every connection
+            io.to(user.room).emit('newMessage', generateMessage(user.name, newCreateMessage.text));
+        }
         
-        // Emits an event to every connection
-        io.emit('newMessage', generateMessage(newCreateMessage.from, newCreateMessage.text));
         // This will run the callback function in createMessage in index.js.
         callback();
 
@@ -71,7 +74,10 @@ io.on('connection', (socket) => {
     });
 
     socket.on('createLocationMessage', (coords) => {
-        io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+        let user = users.getUser(socket.id);
+        if (user) {
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+        }
     });
 
     socket.on('disconnect', () => {
